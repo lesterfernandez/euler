@@ -10,11 +10,11 @@ def getLargestPalindrome(n):
     lowerBound = pow(10, n - 1)
     upperBound = pow(10, n)
     factors = (1, 1)
-    palindrome = 1
+    palindrome = 0
     for i in range(lowerBound, upperBound):
         for j in range(i, upperBound):
             product = i * j
-            if isPalindrome(str(product)) and product > palindrome:
+            if product > palindrome and isPalindrome(str(product)):
                 palindrome = product
                 factors = i, j
     return [palindrome, factors]
