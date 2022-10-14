@@ -1,8 +1,10 @@
 def getPrimeFactors(n):
     factors = {} # dict: { factor: power }
+
     while n % 2 == 0:
         factors[2] = factors.get(2, 0) + 1
         n /= 2
+
     divisor = 3
     while n > 1:
         if n % divisor == 0:
@@ -10,9 +12,10 @@ def getPrimeFactors(n):
             n /= divisor
         else: 
             divisor += 2
+
     return factors
 
-def smallestMultiple(num_range):
+def smallestMultiple(num_range: tuple[int, int]) -> int:
     common_factors = {}
     for i in range(num_range[0], num_range[1] + 1):
         factors = getPrimeFactors(i)
@@ -25,4 +28,4 @@ def smallestMultiple(num_range):
     return product
 
 
-print(smallestMultiple([1, 20]))
+print(smallestMultiple((1, 20)))

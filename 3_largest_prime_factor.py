@@ -1,4 +1,4 @@
-def getLargestFactor(n):
+def getLargestFactor(n: int | float) -> int:
     divisor = 2
     while n % 2 == 0:
       n /= 2

@@ -1,12 +1,14 @@
-def isPalindrome(s):
-    i, j = 0, len(s) - 1
-    while i < j:
-        if s[i] != s[j]: return False
-        i += 1
-        j -= 1
+def isPalindrome(s: str) -> bool:
+    left = 0
+    right = len(s) -1
+    while left < right:
+        if s[left] != s[right]: 
+            return False
+        left += 1
+        right -= 1
     return True
 
-def getLargestPalindrome(n):
+def getLargestPalindrome(n: int) -> tuple[int, tuple[int, int]]:
     lowerBound = pow(10, n - 1)
     upperBound = pow(10, n)
     factors = (1, 1)
@@ -17,10 +19,8 @@ def getLargestPalindrome(n):
             if product > palindrome and isPalindrome(str(product)):
                 palindrome = product
                 factors = i, j
-    return [palindrome, factors]
+    return palindrome, factors
 
 
-n = input("Number of digits for largest palindrome: ")
-while not n.isdigit():
-    n = input("Please enter an integer: ")
+n = 3
 print(getLargestPalindrome(int(n)))

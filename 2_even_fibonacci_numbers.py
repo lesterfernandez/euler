@@ -1,4 +1,5 @@
-first, second = 1, 2
+first = 1
+second = 2
 sum = 0
 while second < 4000000:
     first, second = second, first + second
