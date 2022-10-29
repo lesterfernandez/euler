@@ -18,7 +18,7 @@ def maxDigitProductFromFile(file_name: str, n: int) -> int:
             else:
                 head = window.popleft()
                 window.append(num)
-                product = (product / head) * num
+                product = (product // head) * num
                 if product > max_product:
                     max_product = product
     return max_product
