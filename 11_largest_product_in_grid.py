@@ -1,4 +1,5 @@
-import math
+import time
+start_time = time.perf_counter()
 
 def buildMatrixFromFile(file_name: str) -> list[list[int]]:
     file = open(file_name)
@@ -10,55 +11,31 @@ def buildMatrixFromFile(file_name: str) -> list[list[int]]:
     file.close()
     return matrix
 
-def largestProductFromLists(windows: list[list[int]]) -> int:
-    max_product = 1
-    for window in windows:
-        max_product = max(max_product, math.prod(window))
-    return max_product
-
 def maxNProductInMatrix(matrix: list[list[int]], n: int) -> int:
-    def buildHorizontal(row: list[int], colIdx: int, n: int) -> list[int]:
-        return row[colIdx : colIdx + n]
-
-    def buildVertical(rowIdx: int, colIdx: int, n: int) -> list[int]:
-        vertical = []
-        for k in range(n):
-            vertical.append(matrix[rowIdx + k][colIdx])
-        return vertical
-
-    def buildDiagonalDown(rowIdx: int, colIdx: int, n: int) -> list[int]:
-        diagonalDown = []
-        for k in range(n):
-            diagonalDown.append(matrix[rowIdx + k][colIdx + k])
-        return diagonalDown
-
-    def buildDiagonalUp(rowIdx: int, colIdx: int, n: int) -> list[int]:
-        diagonalUp = []
-        for k in range(n - 1, -1, -1):
-            diagonalUp.append(matrix[rowIdx + k][colIdx + n - 1 - k])
-        return diagonalUp
-
     max_product = 1
-    for i, row in enumerate(matrix):
-        for j, _ in enumerate(row):
-            horizontal: list[int] = []
-            vertical: list[int] = []
-            diagonalDown: list[int] = []
-            diagonalUp: list[int] = []
-            if i <= len(matrix) - n and j <= len(row) - n:
-                horizontal = buildHorizontal(row, j, n)
-                vertical = buildVertical(i, j, n)
-                diagonalDown = buildDiagonalDown(i, j, n)
-                diagonalUp = buildDiagonalUp(i, j, n)
-            elif i <= len(matrix) - n:
-                vertical = buildVertical(i, j, n)
-            elif j <= len(row) - n:
-                horizontal = buildHorizontal(row, j, n)
+    for rowIdx, row in enumerate(matrix):
+        for colIdx, _ in enumerate(row):
+            horizontal = 1
+            vertical = 1
+            diagonalDown = 1
+            diagonalUp = 1
+            for k in range(n):
+                if colIdx + n <= len(row):
+                    horizontal *= row[colIdx + k]
 
-            product = largestProductFromLists([horizontal, vertical, diagonalDown, diagonalUp])
-            max_product = max(max_product, product)
+                if rowIdx + n <= len(matrix):
+                    vertical *= matrix[rowIdx + k][colIdx]
+
+                if colIdx + n <= len(row) and rowIdx + n <= len(matrix):
+                    diagonalDown *= matrix[rowIdx + k][colIdx + k]
+                    diagonalUp *= matrix[rowIdx + n - 1 - k][colIdx + k]
+
+            max_product = max(horizontal, vertical, diagonalDown, diagonalUp, max_product)
     return max_product
 
 matrix = buildMatrixFromFile("./11_input.txt")
 result = maxNProductInMatrix(matrix, 4)
 print(result)
+
+end_time = time.perf_counter()
+print(f"it took : {(end_time - start_time) * 1000:0.3f}ms")
