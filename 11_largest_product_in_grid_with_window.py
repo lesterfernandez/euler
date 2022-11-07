@@ -1,10 +1,16 @@
+# Gets max product and its corresponding window/block
+
 import math
 import time
 start_time = time.perf_counter()
 
-# O(n*m) time
-# O(n*m) space
-# GETS MAX PRODUCT (WITH WINDOW)
+# Let n = the amount of numbers in the input matrix
+# Let k = the size of the window / number of products
+# Runtime complexity:
+# O(n)
+# Memory consumption:
+# 4 lists of size k are created every iteration; We iterate n times
+# O(4kn) = O(n) (k is a constant) (not including input matrix)
 
 def buildMatrixFromFile(file_name: str) -> list[list[int]]:
     file = open(file_name)
@@ -16,54 +22,49 @@ def buildMatrixFromFile(file_name: str) -> list[list[int]]:
     file.close()
     return matrix
 
-
-def getLargestWindow(windows: list[list[int]]) -> tuple[int, list[int]]:
+def getLargestWindow(*windows: list[int]): # *args
     max_product = 1
-    max_window = [1, 1, 1, 1]
+    max_window = [1]
     for window in windows:
         product = math.prod(window)
-        if product > math.prod(max_window):
+        if product > max_product:
             max_window = window
             max_product = product
     return max_product, max_window
 
 def maxNProductInMatrix(matrix: list[list[int]], n: int) -> tuple[int, list[int]]:
-    def buildHorizontal(row: list[int], colIdx: int, n: int) -> list[int]:
-        return row[colIdx : colIdx + n]
+    def buildHorizontal(row: list[int], colIdx: int, n: int):
+        return row[colIdx : colIdx + n] # list slicing
 
-    def buildVertical(rowIdx: int, colIdx: int, n: int) -> list[int]:
-        vertical = []
-        for k in range(n):
-            vertical.append(matrix[rowIdx + k][colIdx])
-        return vertical
+    def buildVertical(rowIdx: int, colIdx: int, n: int):
+        return [ matrix[rowIdx + i][colIdx] for i in range(n) ] # list comprehension
 
-    def buildDiagonals(rowIdx: int, colIdx: int, n: int) -> tuple[list[int], list[int]]:
-        diagonalDown = []
-        diagonalUp = []
-        for k in range(n):
-            diagonalDown.append(matrix[rowIdx + k][colIdx + k])
-            diagonalUp.append(matrix[rowIdx + n - 1 - k][colIdx + k])
-        return diagonalDown, diagonalUp
+    def buildDiagonalDown(rowIdx: int, colIdx: int, n: int):
+        return [ matrix[rowIdx + i][colIdx + i] for i in range(n) ]
+
+    def buildDiagonalUp(rowIdx: int, colIdx: int, n: int):
+        return [ matrix[rowIdx + n - 1 - i][colIdx + i] for i in range(n) ]
 
     max_product = 1
     max_window = []
     for rowIdx, row in enumerate(matrix):
         for colIdx, _ in enumerate(row):
-            horizontal: list[int] = []
-            vertical: list[int] = []
-            diagonalDown: list[int] = []
-            diagonalUp: list[int] = []
+            horizontal = []
+            vertical = []
+            diagonalDown = []
+            diagonalUp = []
 
             if rowIdx <= len(matrix) - n and colIdx <= len(row) - n:
                 horizontal = buildHorizontal(row, colIdx, n)
                 vertical = buildVertical(rowIdx, colIdx, n)
-                diagonalDown, diagonalUp = buildDiagonals(rowIdx, colIdx, n)
+                diagonalDown = buildDiagonalDown(rowIdx, colIdx, n)
+                diagonalUp = buildDiagonalUp(rowIdx, colIdx, n)
             elif rowIdx <= len(matrix) - n:
                 vertical = buildVertical(rowIdx, colIdx, n)
             elif colIdx <= len(row) - n:
                 horizontal = buildHorizontal(row, colIdx, n)
 
-            product, window = getLargestWindow([horizontal, vertical, diagonalDown, diagonalUp])
+            product, window = getLargestWindow(horizontal, vertical, diagonalDown, diagonalUp)
             if product > max_product:
                 max_window = window
                 max_product = product
