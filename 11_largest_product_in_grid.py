@@ -1,6 +1,10 @@
 import time
 start_time = time.perf_counter()
 
+# O(n) time
+# O(1) space
+# GETS MAX PRODUCT (NO WINDOW)
+
 def buildMatrixFromFile(file_name: str) -> list[list[int]]:
     file = open(file_name)
     matrix = []
@@ -37,5 +41,6 @@ matrix = buildMatrixFromFile("./11_input.txt")
 result = maxNProductInMatrix(matrix, 4)
 print(result)
 
+# Performance timer
 end_time = time.perf_counter()
 print(f"it took : {(end_time - start_time) * 1000:0.3f}ms")
