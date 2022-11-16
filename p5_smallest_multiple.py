@@ -1,10 +1,13 @@
+# O(sqrt(n))
 def getPrimeFactors(n):
-    factors = {} # dict: { factor: power }
+    factors: dict[int, int] = {} # dict: { factor: power }
 
+    # O(log2(n))
     while n % 2 == 0:
         factors[2] = factors.get(2, 0) + 1
         n /= 2
 
+    # O(sqrt(n))
     divisor = 3
     while n > 1:
         if n % divisor == 0:
@@ -28,4 +31,5 @@ def smallestMultiple(num_range: tuple[int, int]) -> int:
     return product
 
 
-print(smallestMultiple((1, 20)))
+if __name__ == "__main__":
+    print(smallestMultiple((1, 20)))
